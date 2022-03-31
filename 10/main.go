@@ -22,6 +22,27 @@ go-telnet --timeout=10s host port go-telnet mysite.ru 8080 go-telnet --timeout=3
 должна также завершаться. При подключении к несуществующему серверу, программа должна завершаться через timeout
 */
 
+func main() {
+	// Считываем задержку на подключение
+	timeout := flag.Int("t", 10, "timeout")
+
+	flag.Parse()
+
+	if flag.NArg() != 2 {
+		log.Fatalln("Invalid input(port or ip)")
+	}
+
+	args := flag.Args()
+
+	ip := args[0]
+	port := args[1]
+
+	fmt.Println("Wait to connection")
+	time.Sleep(time.Second * time.Duration(*timeout))
+
+	connect(ip, port)
+}
+
 func connect(ip string, port string) {
 	// Подключаемся к сокету
 	address := ip + ":" + port
@@ -51,25 +72,4 @@ func connect(ip string, port string) {
 		fmt.Print("Message from server: " + message)
 
 	}
-}
-
-func main() {
-	// Считываем задержку на подключение
-	timeout := flag.Int("t", 10, "timeout")
-
-	flag.Parse()
-
-	if flag.NArg() != 2 {
-		log.Fatalln("Invalid input(port or ip)")
-	}
-
-	args := flag.Args()
-
-	ip := args[0]
-	port := args[1]
-
-	fmt.Println("Wait to connection")
-	time.Sleep(time.Second * time.Duration(*timeout))
-
-	connect(ip, port)
 }
